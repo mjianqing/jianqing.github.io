@@ -588,6 +588,140 @@
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="ch">
+    <link itemprop="mainEntityOfPage" href="http://example.com/2024/04/21/%E7%AA%81%E7%A0%B4UniApp%E8%AE%BF%E9%97%AE%E5%BA%94%E7%94%A8%E6%B2%99%E7%9B%92%E6%96%87%E4%BB%B6%E7%9A%84%E9%99%90%E5%88%B6%E5%AE%9E%E8%B7%B5/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="见青">
+      <meta itemprop="description" content="沉舟侧畔千帆过,轻舟已过万重山">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="见青知春">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/2024/04/21/%E7%AA%81%E7%A0%B4UniApp%E8%AE%BF%E9%97%AE%E5%BA%94%E7%94%A8%E6%B2%99%E7%9B%92%E6%96%87%E4%BB%B6%E7%9A%84%E9%99%90%E5%88%B6%E5%AE%9E%E8%B7%B5/" class="post-title-link" itemprop="url">突破UniApp访问应用沙盒文件的限制实践</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">Posted on</span>
+
+              <time title="Created: 2024-04-21 15:30:00" itemprop="dateCreated datePublished" datetime="2024-04-21T15:30:00+08:00">2024-04-21</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">Edited on</span>
+                <time title="Modified: 2025-01-23 14:22:38" itemprop="dateModified" datetime="2025-01-23T14:22:38+08:00">2025-01-23</time>
+              </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">In</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/uniapp/" itemprop="url" rel="index"><span itemprop="name">uniapp</span></a>
+                </span>
+            </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>UniApp作为一个跨平台开发框架，在提供快速开发能力的同时，也带来了一些固有的限制。其中，应用沙盒文件系统的访问限制就是开发者经常遇到的一个棘手问题。本文将详细介绍如何突破这些限制，实现更灵活的文件访问能力。</p>
+<h2 id="问题背景"><a href="#问题背景" class="headerlink" title="问题背景"></a>问题背景</h2><p>UniApp在开发App时虽然具有显著的开发效率优势，但同时也存在一些局限性：</p>
+<ol>
+<li>文件系统访问受限：只能访问UniApp指定的沙盒文件夹</li>
+<li>图片加载限制：无法直接通过image标签加载本地文件系统的图片</li>
+<li>进程隔离问题：WebView和原生App运行在不同进程，导致文件访问存在障碍</li>
+</ol>
+<h2 id="第一重突破：正确使用UniApp沙盒文件夹"><a href="#第一重突破：正确使用UniApp沙盒文件夹" class="headerlink" title="第一重突破：正确使用UniApp沙盒文件夹"></a>第一重突破：正确使用UniApp沙盒文件夹</h2><h3 id="问题分析"><a href="#问题分析" class="headerlink" title="问题分析"></a>问题分析</h3><p>在UniApp中，直接访问App沙盒任意位置的文件是受限的。这是因为UniApp基于安全考虑，只允许访问特定的文件目录。</p>
+<h3 id="解决方案"><a href="#解决方案" class="headerlink" title="解决方案"></a>解决方案</h3><ol>
+<li><p>使用UniApp提供的标准存储路径</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 获取应用内部文件路径</span></span><br><span class="line"><span class="keyword">const</span> innerPath = plus.<span class="property">io</span>.<span class="title function_">convertLocalFileSystemURL</span>(<span class="string">&#x27;_www/&#x27;</span>);  </span><br><span class="line"><span class="comment">// 获取应用私有文档路径</span></span><br><span class="line"><span class="keyword">const</span> docPath = plus.<span class="property">io</span>.<span class="title function_">convertLocalFileSystemURL</span>(<span class="string">&#x27;_doc/&#x27;</span>);</span><br><span class="line"><span class="comment">// 获取应用私有下载路径</span></span><br><span class="line"><span class="keyword">const</span> downloadPath = plus.<span class="property">io</span>.<span class="title function_">convertLocalFileSystemURL</span>(<span class="string">&#x27;_downloads/&#x27;</span>);</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>确保文件操作在允许的目录范围内</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">async</span> <span class="keyword">function</span> <span class="title function_">saveFile</span>(<span class="params">tempFilePath</span>) &#123;</span><br><span class="line">    <span class="keyword">try</span> &#123;</span><br><span class="line">        <span class="keyword">const</span> savedPath = <span class="keyword">await</span> uni.<span class="title function_">saveFile</span>(&#123;</span><br><span class="line">            <span class="attr">tempFilePath</span>: tempFilePath,</span><br><span class="line">            <span class="comment">// 确保保存在UniApp可访问的目录中</span></span><br><span class="line">        &#125;);</span><br><span class="line">        <span class="keyword">return</span> savedPath;</span><br><span class="line">    &#125; <span class="keyword">catch</span> (e) &#123;</span><br><span class="line">        <span class="variable language_">console</span>.<span class="title function_">error</span>(<span class="string">&#x27;文件保存失败：&#x27;</span>, e);</span><br><span class="line">        <span class="keyword">throw</span> e;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></li>
+</ol>
+<h2 id="第二重突破：跨进程文件访问"><a href="#第二重突破：跨进程文件访问" class="headerlink" title="第二重突破：跨进程文件访问"></a>第二重突破：跨进程文件访问</h2><h3 id="问题分析-1"><a href="#问题分析-1" class="headerlink" title="问题分析"></a>问题分析</h3><p>即使文件正确保存在UniApp可访问的目录中，在使用image等标签加载本地文件时仍然会遇到问题。这是因为：</p>
+<ol>
+<li>WebView和App运行在不同的进程中</li>
+<li>WebView对file:&#x2F;&#x2F;协议的访问存在安全限制</li>
+<li>跨进程文件访问需要特殊处理</li>
+</ol>
+<h3 id="创新解决方案：本地HTTP服务"><a href="#创新解决方案：本地HTTP服务" class="headerlink" title="创新解决方案：本地HTTP服务"></a>创新解决方案：本地HTTP服务</h3><p>既然WebView天生支持HTTP协议，我们可以通过在App中启动本地HTTP服务器来解决这个问题：</p>
+<ol>
+<li><p>服务器配置</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 在App启动时初始化本地HTTP服务</span></span><br><span class="line"><span class="keyword">const</span> localServer = &#123;</span><br><span class="line">    <span class="title function_">start</span>(<span class="params"></span>) &#123;</span><br><span class="line">        plus.<span class="property">navigator</span>.<span class="title function_">createLocalServer</span>(&#123;</span><br><span class="line">            <span class="attr">port</span>: <span class="number">8080</span>,</span><br><span class="line">            <span class="attr">documentRoot</span>: <span class="string">&#x27;_www/&#x27;</span>,  <span class="comment">// 文件根目录</span></span><br><span class="line">            <span class="attr">name</span>: <span class="string">&#x27;LocalFileServer&#x27;</span></span><br><span class="line">        &#125;, <span class="function">(<span class="params">server</span>) =&gt;</span> &#123;</span><br><span class="line">            <span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="string">&#x27;本地服务器启动成功&#x27;</span>);</span><br><span class="line">        &#125;);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>文件访问转换</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">function</span> <span class="title function_">convertToLocalHttpUrl</span>(<span class="params">filePath</span>) &#123;</span><br><span class="line">    <span class="comment">// 将本地文件路径转换为http URL</span></span><br><span class="line">    <span class="keyword">return</span> <span class="string">`http://localhost:8080/<span class="subst">$&#123;filePath&#125;</span>`</span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 使用示例</span></span><br><span class="line"><span class="keyword">const</span> imageUrl = <span class="title function_">convertToLocalHttpUrl</span>(<span class="string">&#x27;images/test.jpg&#x27;</span>);</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>在页面中使用</p>
+<figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">template</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">view</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">image</span> <span class="attr">:src</span>=<span class="string">&quot;imageUrl&quot;</span> <span class="attr">mode</span>=<span class="string">&quot;aspectFit&quot;</span>&gt;</span><span class="tag">&lt;/<span class="name">image</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;/<span class="name">view</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">template</span>&gt;</span></span><br><span class="line"></span><br><span class="line"><span class="tag">&lt;<span class="name">script</span>&gt;</span><span class="language-javascript"></span></span><br><span class="line"><span class="language-javascript"><span class="keyword">export</span> <span class="keyword">default</span> &#123;</span></span><br><span class="line"><span class="language-javascript">    <span class="title function_">data</span>(<span class="params"></span>) &#123;</span></span><br><span class="line"><span class="language-javascript">        <span class="keyword">return</span> &#123;</span></span><br><span class="line"><span class="language-javascript">            <span class="attr">imageUrl</span>: <span class="string">&#x27;&#x27;</span></span></span><br><span class="line"><span class="language-javascript">        &#125;</span></span><br><span class="line"><span class="language-javascript">    &#125;,</span></span><br><span class="line"><span class="language-javascript">    <span class="title function_">onLoad</span>(<span class="params"></span>) &#123;</span></span><br><span class="line"><span class="language-javascript">        <span class="comment">// 获取文件的HTTP访问地址</span></span></span><br><span class="line"><span class="language-javascript">        <span class="variable language_">this</span>.<span class="property">imageUrl</span> = <span class="title function_">convertToLocalHttpUrl</span>(<span class="string">&#x27;test.jpg&#x27;</span>);</span></span><br><span class="line"><span class="language-javascript">    &#125;</span></span><br><span class="line"><span class="language-javascript">&#125;</span></span><br><span class="line"><span class="language-javascript"></span><span class="tag">&lt;/<span class="name">script</span>&gt;</span></span><br></pre></td></tr></table></figure></li>
+</ol>
+<h2 id="最佳实践建议"><a href="#最佳实践建议" class="headerlink" title="最佳实践建议"></a>最佳实践建议</h2><ol>
+<li><p>文件存储规范</p>
+<ul>
+<li>统一使用UniApp提供的标准存储路径</li>
+<li>建立清晰的文件目录结构</li>
+<li>及时清理临时文件</li>
+</ul>
+</li>
+<li><p>本地服务器管理</p>
+<ul>
+<li>在App启动时初始化服务器</li>
+<li>合理设置端口号避免冲突</li>
+<li>注意资源释放和错误处理</li>
+</ul>
+</li>
+<li><p>安全性考虑</p>
+<ul>
+<li>限制本地服务器只能访问特定目录</li>
+<li>添加必要的访问控制</li>
+<li>注意文件权限管理</li>
+</ul>
+</li>
+</ol>
+<h2 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h2><p>通过以上两重突破，我们成功解决了UniApp在文件访问方面的限制：</p>
+<ol>
+<li>正确使用UniApp沙盒文件系统，确保文件存储在可访问位置</li>
+<li>通过本地HTTP服务器，巧妙解决了WebView跨进程访问文件的问题</li>
+</ol>
+<p>这些解决方案不仅提高了应用的灵活性，也为UniApp开发提供了更多可能性。在实际应用中，开发者需要根据具体场景选择合适的方案，同时注意安全性和性能的平衡。</p>
+
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="ch">
     <link itemprop="mainEntityOfPage" href="http://example.com/2024/04/21/iOS%E9%9C%87%E5%8A%A8%E5%8F%8D%E9%A6%88%E6%8C%87%E5%8D%97/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -911,13 +1045,13 @@
       <div class="site-state-item site-state-posts">
           <a href="/archives/">
         
-          <span class="site-state-item-count">5</span>
+          <span class="site-state-item-count">6</span>
           <span class="site-state-item-name">posts</span>
         </a>
       </div>
       <div class="site-state-item site-state-categories">
             <a href="/categories/">
-        <span class="site-state-item-count">2</span>
+        <span class="site-state-item-count">3</span>
         <span class="site-state-item-name">categories</span></a>
       </div>
   </nav>
