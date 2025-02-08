@@ -162,7 +162,7 @@
       <header class="post-header">
         <h2 class="post-title" itemprop="name headline">
           
-            <a href="/2025/02/08/%E5%A6%82%E4%BD%95%E5%AE%9E%E7%8E%B0%E4%B8%80%E4%B8%AA%E9%80%9A%E7%94%A8%E7%9A%84Flutter%E7%99%BB%E5%BD%95%E9%A1%B5%E9%9D%A2/" class="post-title-link" itemprop="url">Untitled</a>
+            <a href="/2025/02/08/%E5%A6%82%E4%BD%95%E5%AE%9E%E7%8E%B0%E4%B8%80%E4%B8%AA%E9%80%9A%E7%94%A8%E7%9A%84Flutter%E7%99%BB%E5%BD%95%E9%A1%B5%E9%9D%A2/" class="post-title-link" itemprop="url">如何实现一个通用的Flutter登录页面</a>
         </h2>
 
         <div class="post-meta">
@@ -173,7 +173,16 @@
               <span class="post-meta-item-text">Posted on</span>
               
 
-              <time title="Created: 2025-02-08 10:13:40 / Modified: 11:07:49" itemprop="dateCreated datePublished" datetime="2025-02-08T10:13:40+08:00">2025-02-08</time>
+              <time title="Created: 2025-02-08 10:13:40 / Modified: 11:10:47" itemprop="dateCreated datePublished" datetime="2025-02-08T10:13:40+08:00">2025-02-08</time>
+            </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">In</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Flutter/" itemprop="url" rel="index"><span itemprop="name">Flutter</span></a>
+                </span>
             </span>
 
           
@@ -187,9 +196,7 @@
     <div class="post-body" itemprop="articleBody">
 
       
-          <hr>
-<p>title: 如何实现一个通用的Flutter登录页面<br>date: 2025-02-08 10:13:40<br>category: Flutter<br>tags: Flutter,</p>
-<h1 id="Flutter-登录页面的基础实现"><a href="#Flutter-登录页面的基础实现" class="headerlink" title="Flutter 登录页面的基础实现"></a>Flutter 登录页面的基础实现</h1><h2 id="页面"><a href="#页面" class="headerlink" title="页面"></a>页面</h2><h3 id="输入框"><a href="#输入框" class="headerlink" title="输入框"></a>输入框</h3><p>绘制基本的2个输入框,这两个输入框都限制了最大长度,置空了默认的字符计算元素,不然,字符计算元素显示出来,会把输入框撑高;TextField和iOS里面的UITextField命令很像,只不过主要都是通过’decoration’装饰来改变它的外观,,比如这里的hintText,border,contentPadding,counterText等,通过这些属性来改变输入框的样式;</p>
+          <h1 id="Flutter-登录页面的基础实现"><a href="#Flutter-登录页面的基础实现" class="headerlink" title="Flutter 登录页面的基础实现"></a>Flutter 登录页面的基础实现</h1><h2 id="页面"><a href="#页面" class="headerlink" title="页面"></a>页面</h2><h3 id="输入框"><a href="#输入框" class="headerlink" title="输入框"></a>输入框</h3><p>绘制基本的2个输入框,这两个输入框都限制了最大长度,置空了默认的字符计算元素,不然,字符计算元素显示出来,会把输入框撑高;TextField和iOS里面的UITextField命令很像,只不过主要都是通过’decoration’装饰来改变它的外观,,比如这里的hintText,border,contentPadding,counterText等,通过这些属性来改变输入框的样式;</p>
 <figure class="highlight dart"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 创建两个输入框的控制器</span></span><br><span class="line"><span class="keyword">final</span> TextEditingController _phoneController = TextEditingController();</span><br><span class="line">  <span class="keyword">final</span> TextEditingController _codeController = TextEditingController();</span><br><span class="line"><span class="comment">// 绘制手机号输入框</span></span><br><span class="line">child: TextField(</span><br><span class="line">    controller: _phoneController,</span><br><span class="line">    maxLength: <span class="number">11</span>,</span><br><span class="line">    decoration: <span class="keyword">const</span> InputDecoration(</span><br><span class="line">    hintText: <span class="string">&#x27;输入手机号&#x27;</span>, </span><br><span class="line">    border: InputBorder.none, </span><br><span class="line">    contentPadding:</span><br><span class="line">    EdgeInsets.symmetric(vertical: <span class="number">12</span>, horizontal: <span class="number">20</span>), </span><br><span class="line">    counterText: <span class="string">&#x27;&#x27;</span>,</span><br><span class="line">    ),</span><br><span class="line"><span class="comment">// 绘制验证码输入框</span></span><br><span class="line">child: TextField(</span><br><span class="line">    controller: _codeController, </span><br><span class="line">    maxLength: <span class="number">6</span>, <span class="comment">// Limit to 6 characters</span></span><br><span class="line">    decoration: <span class="keyword">const</span> InputDecoration(</span><br><span class="line">    hintText: <span class="string">&#x27;输入验证码&#x27;</span>, </span><br><span class="line">    hintStyle: TextStyle(color: Colors.red),</span><br><span class="line">    border: InputBorder.none, <span class="comment">// 去掉默认边框</span></span><br><span class="line">    contentPadding: EdgeInsets.symmetric(</span><br><span class="line">        vertical: <span class="number">12</span>, horizontal: <span class="number">20</span>), </span><br><span class="line">    counterText: <span class="string">&#x27;&#x27;</span>, </span><br><span class="line">    ),</span><br></pre></td></tr></table></figure>
 <h3 id="按钮"><a href="#按钮" class="headerlink" title="按钮"></a>按钮</h3><p>发送验证码的按钮和登录按钮,我设计的比较简单,按钮的点击事件,通过onPressed属性来设置,这里的onPressed属性是一个函数,当按钮被点击时,会调用这个函数;</p>
 <figure class="highlight dart"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 获取验证码</span></span><br><span class="line">ElevatedButton(</span><br><span class="line">    onPressed: () &#123;</span><br><span class="line">    _sendCode();</span><br><span class="line">    &#125;,</span><br><span class="line">    child: <span class="keyword">const</span> Text(<span class="string">&#x27;获取验证码&#x27;</span>),</span><br><span class="line">),</span><br><span class="line"></span><br><span class="line"><span class="comment">// 登录</span></span><br><span class="line">ElevatedButton(</span><br><span class="line">    onPressed: _login,</span><br><span class="line">    child: <span class="keyword">const</span> Text(<span class="string">&#x27;登录&#x27;</span>),</span><br><span class="line">),</span><br></pre></td></tr></table></figure>
@@ -1203,7 +1210,7 @@
         <span class="site-state-item-name">categories</span></a>
       </div>
       <div class="site-state-item site-state-tags">
-        <span class="site-state-item-count">1</span>
+        <span class="site-state-item-count">2</span>
         <span class="site-state-item-name">tags</span>
       </div>
   </nav>
